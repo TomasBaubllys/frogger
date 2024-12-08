@@ -2,11 +2,9 @@ package Header;
 
 import Constants.Constants;
 import Editor.EditorInterface;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -25,26 +23,7 @@ public class Header extends HBox implements ConsoleInterface {
         });
 
         this.setSpacing(Constants.DEFAULT_SPACING);
-
-        Button saveButton = new Button("Save");
-
-        saveButton.setOnAction(e -> {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Save File");
-            fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text files","*.txt"),new FileChooser.ExtensionFilter("All files", "*.*"));
-            File file = fileChooser.showSaveDialog(new Stage());
-
-            String code = editor.getText();
-            try {
-
-                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
-                bufferedWriter.write(code);
-                bufferedWriter.close();
-
-            } catch (IOException ex) {
-                System.err.println(ex.getMessage());
-            }
-        });
+        Button saveButton = getButton(editor);
 
         Button loadButton = new Button("Load");
 
@@ -58,6 +37,10 @@ public class Header extends HBox implements ConsoleInterface {
                     new FileChooser.ExtensionFilter("All Files", "*.*")
             );
             File file = fileChooser.showOpenDialog(new Stage());
+
+            if(file == null) {
+                return;
+            }
 
             try {
 
@@ -95,6 +78,32 @@ public class Header extends HBox implements ConsoleInterface {
         this.console.setPrefWidth(300);
 
         this.getChildren().addAll(runButton, saveButton, loadButton, stopButton, console);
+    }
+
+    private static Button getButton(EditorInterface editor) {
+        Button saveButton = new Button("Save");
+
+        saveButton.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save File");
+            fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text files","*.txt"),new FileChooser.ExtensionFilter("All files", "*.*"));
+            File file = fileChooser.showSaveDialog(new Stage());
+
+            if(file == null) {
+                return;
+            }
+
+            String code = editor.getText();
+            try {
+                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
+                bufferedWriter.write(code);
+                bufferedWriter.close();
+
+            } catch (IOException ex) {
+                System.err.println(ex.getMessage());
+            }
+        });
+        return saveButton;
     }
 
     public void clearConsole() {

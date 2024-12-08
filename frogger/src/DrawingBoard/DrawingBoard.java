@@ -135,7 +135,7 @@ public class DrawingBoard extends StackPane implements DrawingBoardInteface {
 
     private void commandUnknown(String command) {
         //System.out.println("Unknown command: " + command);
-        this.consoleInterface.setConsoleText("Unknown command + " + command);
+        this.consoleInterface.setConsoleText("Unknown command: " + command);
         this.editorListener.stopCode();
     }
 
@@ -170,7 +170,6 @@ public class DrawingBoard extends StackPane implements DrawingBoardInteface {
                 return;
             }
 
-            //this.cmdFinnished = true;
             this.moveFrog(nextCommand);
         });
     }
